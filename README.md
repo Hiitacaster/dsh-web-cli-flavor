@@ -1,12 +1,12 @@
 # dsh-web-cli-flavor — DSH Web GUI 终端风格皮肤
 
-> 版本：2026-08-28（A5 轮询瘦身 + hero 美术移除 + /simplify 清理）
-> 纯客户端皮肤：CSS 覆盖 + JS 注入，**不修改 dsh 核心**，只作用于 Web GUI 外观。
+> 版本：2026-08-28（A5 轮询瘦身 + hero 美术移除 + /simplify 清理 + 内置字体）
 
 ## 这是什么
 
 把 DeepSeek Harness Web GUI（http://127.0.0.1:3080）改造成 **dsh-TUI 风格终端质感**（保留 GUI 结构）：
-全局等宽字体（Cascadia Code 优先）、浅色板/深色板跟随系统、输入区终端化（`>` 提示符、块状光标、
+**内置 Cascadia Code 字体**（微软开源，SIL OFL 1.1，随皮肤打包，免系统安装、跨机器渲染一致）、
+浅色板/深色板跟随系统、输入区终端化（`>` 提示符、块状光标、
 hairline 分隔）、大段粘贴折叠提示条、长文本输入区滚动修复、发送后用户消息立即上屏兜底、
 QueueDock 队列条终端化（无框灰字 + `⑂` 前缀 + 与输入框 `>` 对齐 + 折叠 `▸`/展开 `▾`）。
 性能面：hero 界面美术全部移除（回归官方默认）、三处常驻轮询归零（事件驱动 + 可见才轮询）、
@@ -18,14 +18,15 @@ QueueDock 队列条终端化（无框灰字 + `⑂` 前缀 + 与输入框 `>` �
 dsh-web-cli-flavor/
 ├── cordis.patch.yml        # 插件声明（注册 web-cli-flavor 条目）
 ├── package.json            # 插件包元数据
+├── fonts/                  # 内置字体（Cascadia Code 子集 woff2 + OFL.txt 许可）
 ├── lib/
 │   ├── client.template.js  # ★ 皮肤 JS 源码（唯一 JS 源，改这里）
-│   ├── client.js           # ★ 构建产物（build 时内联 CSS，勿手改）
+│   ├── client.js           # ★ 构建产物（build 时内联 CSS + 字体 data URI，勿手改）
 │   └── index.js            # 插件入口（宿主侧：注册 /readonly /workspace /fullacc 别名）
 └── styles/
     └── cli-flavor.css      # ★ 皮肤 CSS 源码（唯一 CSS 源，改这里）
 scripts/
-├── build.mjs               # 构建：CSS 内联进 client.js
+├── build.mjs               # 构建：CSS（含字体 base64）内联进 client.js
 └── install.ps1             # 安装：把皮肤装进指定 dsh profile
 ```
 
@@ -79,7 +80,8 @@ scripts/
 
 | 功能 | 位置 |
 |---|---|
-| 全局等宽字体（Cascadia Code 优先，CJK Sarasa/Noto 兜底） | css §1 |
+| 内置 Cascadia Code 字体（正体/斜体可变字重，data URI 内联，OFL 许可） | css §1.0 + fonts/ |
+| 全局等宽字体栈（Cascadia Code 优先，CJK Sarasa/Noto/YaHei 兜底） | css §1 |
 | 输入区 `>` 提示符 + 块状光标 + hairline 分隔 | template §3.0/§3.1 |
 | 大段粘贴折叠提示条（≥6 行/600 字符，`▸ N 行 · M 字符`） | template §3.1c + css §18 |
 | 长文本输入区修复：grow 钳制 288px（滚到底完整可见、删除缩回兜底） | template §3.1d + css §19 |
