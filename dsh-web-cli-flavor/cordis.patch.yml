@@ -1,0 +1,16 @@
+# ============================================================================
+# dsh-web-cli-flavor bundle patch —— 挂载声明
+# ----------------------------------------------------------------------------
+# 本文件是 dsh-web-cli-flavor 包的"挂载声明"。DSH 启动时按 bundle 层栈把各
+# 插件的 patch 叠起来组成配置树；insert 往配置树里添加新的插件行（entry）。
+# 由于 package.json 声明了 dsh.client，DSH 模块系统会同时把本包扫描为
+# "浏览器插件"，向页面提供 /plugins/dsh-web-cli-flavor/client.js。
+#
+# 注意：这是随包分发的默认挂载。实际生效的注册在 profile 的
+#       cordis.patch.yml（见 scripts/install.ps1 的安装说明）。
+# ============================================================================
+
+- insert:
+    - id: web-cli-flavor          # 插件行 id（唯一）
+      name: 'dsh-web-cli-flavor'  # 模块名：解析到 lib/index.js（host 半侧）
+      config: {}

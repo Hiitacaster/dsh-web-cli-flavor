@@ -1,0 +1,1575 @@
+/* ============================================================================
+ * dsh-web-cli-flavor — Web GUI 终端风格皮肤
+ * ----------------------------------------------------------------------------
+ * 设计来源：参考 ccch1mneyyy/dsh-TUI（Claude Code 风格）的 "Gentle Mist Blue"
+ * 色板与终端质感，但保留 DSH Web GUI 的完整界面（非全 CLI）。
+ *
+ * 实现方式：覆盖 DSH Web 前端的 CSS 变量体系
+ *   - 字体：--dsw-font-family / --ds-font-family-code（全部派生自前者）
+ *   - 浅色板：body 作用域（GUI 默认浅色）
+ *   - 深色板：body[data-ds-dark-theme] 作用域（GUI 深色模式）
+ *
+ * 本文件是样式"单一事实来源"；lib/client.js 内联同一份 CSS 注入页面，
+ * scripts/build.mjs 负责从 client.js 抽取同步（或反向）。
+ * ========================================================================== */
+
+/* ---------------------------------------------------------------------------
+ * 1. 字体：全局等宽（终端感），CJK 用 Sarasa/Noto Mono 兜底
+ * ------------------------------------------------------------------------- */
+:root {
+  --dsw-font-family: "Cascadia Code", "JetBrains Mono", "SF Mono", "Fira Code",
+    "Cascadia Mono", Consolas, "Liberation Mono", Menlo, Courier,
+    "Sarasa Mono SC", "Sarasa Term SC", "Noto Sans Mono CJK SC",
+    "Source Han Mono SC", "Microsoft YaHei", monospace;
+  --ds-font-family-code: "Cascadia Code", "JetBrains Mono", "SF Mono",
+    "Fira Code", "Cascadia Mono", Consolas, "Liberation Mono", Menlo, Courier,
+    "Sarasa Mono SC", "Sarasa Term SC", "Noto Sans Mono CJK SC",
+    "Source Han Mono SC", "Microsoft YaHei", monospace;
+}
+
+/* ---------------------------------------------------------------------------
+ * 2. OMP light 浅色板（Q6：以 dsh-ctui lightTheme 代码官方值为准）
+ *    正文 #2d2d30、弱化 #767676、次级 #6c6c6c、强调蓝 #547da7、
+ *    状态行底 #f0f0f0、用户消息底 #e8e8e8（hover #dedee6）、
+ *    markdown 标题 #9a7326 / 链接 #547da7 / 代码 #5a8080 / 列表符 #588458。
+ * ------------------------------------------------------------------------- */
+body {
+  --dsw-alias-bg-base: #fafafa;
+  --dsw-alias-bg-layer-1: #f0f0f0;
+  --dsw-alias-bg-layer-2: #e8e8e8;
+  --dsw-alias-bg-layer-3: #dedee6;
+  --dsw-alias-bg-overlay: #e0e0e0;
+  --dsw-alias-bg-module-platform: #e8e8e8;
+  --dsw-alias-bg-mask-1: rgba(45, 45, 48, 0.5);
+  --dsw-alias-bg-mask-2: rgba(45, 45, 48, 0.12);
+  --dsw-alias-bg-mask-3: rgba(45, 45, 48, 0.48);
+  --dsw-alias-bg-skeleton: rgba(45, 45, 48, 0.08);
+
+  --dsw-alias-label-primary: #2d2d30;
+  --dsw-alias-label-primary-bluish: #2d2d30;
+  --dsw-alias-label-primary-foreground: #ffffff;
+  --dsw-alias-label-primary-inverted: #ffffff;
+  --dsw-alias-label-secondary: #767676;
+  --dsw-alias-label-tertiary: #6c6c6c;
+  --dsw-alias-label-dimmed: #a0a0a0;
+  --dsw-alias-label-caption: #a0a0a0;
+
+  --dsw-alias-brand-primary: #547da7;
+  --dsw-alias-brand-primary-invert: #ffffff;
+  --dsw-alias-brand-text: #ffffff;
+
+  --dsw-alias-border-l1: rgba(45, 45, 48, 0.08);
+  --dsw-alias-border-l2: rgba(45, 45, 48, 0.14);
+  --dsw-alias-border-l3: rgba(45, 45, 48, 0.22);
+  --dsw-alias-border-l4: rgba(45, 45, 48, 0.3);
+  --dsw-alias-border-inverted: rgba(45, 45, 48, 0.06);
+
+  --dsw-alias-button-primary-fill: #547da7;
+  --dsw-alias-button-primary-hover: #6d93c0;
+  --dsw-alias-button-primary-dimmed: #d8e2ee;
+  --dsw-alias-button-elevated-fill: #e8e8e8;
+  --dsw-alias-button-floating-fill: #fafafa;
+  --dsw-alias-button-floating-hover: #f0f0f0;
+  --dsw-alias-button-contrast-fill: #2d2d30;
+  --dsw-alias-button-ghost-active-fill: #e8e8e8;
+  --dsw-alias-button-ghost-active-hover: #dedee6;
+  --dsw-alias-button-info-fill: #547da7;
+  --dsw-alias-button-info-hover: #6d93c0;
+  --dsw-alias-button-tool-bar-fill: rgba(45, 45, 48, 0.08);
+  --dsw-alias-button-tool-bar-hover: rgba(45, 45, 48, 0.16);
+  --dsw-alias-button-tool-bar-fill-invisible: rgba(45, 45, 48, 0.04);
+
+  --dsw-alias-interactive-bg-hover: rgba(45, 45, 48, 0.07);
+  --dsw-alias-interactive-bg-active: rgba(45, 45, 48, 0.14);
+  --dsw-alias-interactive-bg-hover-solid: #dedee6;
+  --dsw-alias-interactive-bg-hover-accent: rgba(84, 125, 167, 0.14);
+  --dsw-alias-interactive-bg-hover-danger: rgba(170, 85, 85, 0.14);
+
+  --dsw-alias-state-success-primary: #588458;
+  --dsw-alias-state-success-secondary: #588458;
+  --dsw-alias-state-success-tertiary: #e8f0e8;
+  --dsw-alias-state-error-primary: #aa5555;
+  --dsw-alias-state-error-secondary: #aa5555;
+  --dsw-alias-state-warn-primary: #9a7326;
+  --dsw-alias-state-warn-secondary: #9a7326;
+  --dsw-alias-state-warn-label: #9a7326;
+  --dsw-alias-state-warn-tertiary: #f0e8d8;
+  --dsw-alias-state-business-primary: #547da7;
+  --dsw-alias-state-business-tertiary: #d8e2ee;
+
+  --dsw-alias-markdown-code-block: #e8e8f0;
+  --dsw-alias-markdown-code-block-banner: #e8e8e8;
+  --dsw-alias-markdown-inline-code: #e8e8f0;
+  --dsw-alias-markdown-citation: #e8e8e8;
+  --dsw-alias-markdown-placeholder: #e8e8e8;
+  --dsw-alias-markdown-tag: #e8e8e8;
+
+  --dsw-alias-scrollbar-bg-l1: #d5d5d5;
+  --dsw-alias-scrollbar-bg-l2: #c8c8c8;
+  --dsw-alias-scrollbar-hover-l1: #bfbfbf;
+  --dsw-alias-scrollbar-hover-l2: #b4b4b4;
+
+  --dsw-alias-tooltip-bg: #2d2d30;
+  --dsw-alias-toast-bg: #2d2d30;
+  --dsw-alias-hovercard-bg: #fafafa;
+
+  --dsw-specific-sidebar-fill: #f0f0f0;
+  --dsw-specific-sidebar-nav-item-active: #e8e8e8;
+  --dsw-specific-sidebar-nav-item-hover: #dedee6;
+  --dsw-specific-sidebar-nav-item-active-accent: #d0d0e0;
+  --dsw-specific-input-major: #fafafa;
+  --dsw-specific-bubble: #e8e8e8;
+  --dsw-specific-bubble-highlight: #dedee6;
+  --dsw-specific-menu: #fafafa;
+  --dsw-specific-selector: #e8e8e8;
+  --dsw-specific-tip: #e8e8e8;
+  --dsw-specific-login-input: #fafafa;
+}
+
+/* ---------------------------------------------------------------------------
+ * 3. OMP dark 深色板（Q3=D：深色版用 dsh-TUI 官方 darkTheme 重做，统一风格）
+ *    正文 #d4d4d4、弱化 #5f6673、次级 #777d88、链接蓝 #0088fa、
+ *    强调金 #febc38、状态行底 #121212、用户消息底 #221d1a（hover #2a241f）、
+ *    markdown 标题金 / 链接蓝 / 代码紫 #e5c1ff / 列表符金。
+ * ------------------------------------------------------------------------- */
+body[data-ds-dark-theme] {
+  --dsw-alias-bg-base: #121212;
+  --dsw-alias-bg-layer-1: #161a1f;
+  --dsw-alias-bg-layer-2: #1d2129;
+  --dsw-alias-bg-layer-3: #22262e;
+  --dsw-alias-bg-overlay: #292d33;
+  --dsw-alias-bg-module-platform: #1d2129;
+  --dsw-alias-bg-mask-1: rgba(0, 0, 0, 0.55);
+  --dsw-alias-bg-mask-2: rgba(0, 0, 0, 0.22);
+  --dsw-alias-bg-mask-3: rgba(0, 0, 0, 0.5);
+  --dsw-alias-bg-skeleton: rgba(212, 212, 212, 0.08);
+
+  --dsw-alias-label-primary: #d4d4d4;
+  --dsw-alias-label-primary-bluish: #d4d4d4;
+  --dsw-alias-label-primary-foreground: #121212;
+  --dsw-alias-label-primary-inverted: #121212;
+  --dsw-alias-label-secondary: #9aa0aa;
+  --dsw-alias-label-tertiary: #777d88;
+  --dsw-alias-label-dimmed: #5f6673;
+  --dsw-alias-label-caption: #5f6673;
+
+  --dsw-alias-brand-primary: #0088fa;
+  --dsw-alias-brand-primary-invert: #121212;
+  --dsw-alias-brand-text: #d4d4d4;
+
+  --dsw-alias-border-l1: rgba(212, 212, 212, 0.08);
+  --dsw-alias-border-l2: rgba(212, 212, 212, 0.14);
+  --dsw-alias-border-l3: rgba(212, 212, 212, 0.22);
+  --dsw-alias-border-l4: rgba(212, 212, 212, 0.3);
+  --dsw-alias-border-inverted: rgba(212, 212, 212, 0.06);
+  --dsw-alias-border-inverted2: rgba(212, 212, 212, 0.1);
+
+  --dsw-alias-button-primary-fill: #0088fa;
+  --dsw-alias-button-primary-hover: #4aa8ff;
+  --dsw-alias-button-primary-dimmed: #22262e;
+  --dsw-alias-button-elevated-fill: #22262e;
+  --dsw-alias-button-floating-fill: #1d2129;
+  --dsw-alias-button-floating-hover: #22262e;
+  --dsw-alias-button-contrast-fill: #d4d4d4;
+  --dsw-alias-button-ghost-active-fill: #22262e;
+  --dsw-alias-button-ghost-active-hover: #292d33;
+  --dsw-alias-button-ghost-active-border: #777d88;
+  --dsw-alias-button-info-fill: #0088fa;
+  --dsw-alias-button-info-hover: #4aa8ff;
+  --dsw-alias-button-tool-bar-fill: rgba(93, 99, 112, 0.45);
+  --dsw-alias-button-tool-bar-hover: rgba(93, 99, 112, 0.6);
+  --dsw-alias-button-tool-bar-fill-invisible: rgba(18, 18, 18, 0.4);
+
+  --dsw-alias-interactive-bg-hover: rgba(212, 212, 212, 0.08);
+  --dsw-alias-interactive-bg-active: rgba(212, 212, 212, 0.14);
+  --dsw-alias-interactive-bg-hover-solid: #22262e;
+  --dsw-alias-interactive-bg-hover-accent: rgba(0, 136, 250, 0.18);
+  --dsw-alias-interactive-bg-hover-danger: rgba(252, 58, 75, 0.16);
+
+  --dsw-alias-state-success-primary: #89d281;
+  --dsw-alias-state-success-secondary: #89d281;
+  --dsw-alias-state-success-tertiary: #1f3322;
+  --dsw-alias-state-error-primary: #fc3a4b;
+  --dsw-alias-state-error-secondary: #fc3a4b;
+  --dsw-alias-state-warn-primary: #e4c00f;
+  --dsw-alias-state-warn-secondary: #e4c00f;
+  --dsw-alias-state-warn-label: #e4c00f;
+  --dsw-alias-state-warn-tertiary: #3e3326;
+  --dsw-alias-state-business-primary: #0088fa;
+  --dsw-alias-state-business-tertiary: #123a66;
+
+  --dsw-alias-markdown-code-block: #161a1f;
+  --dsw-alias-markdown-code-block-banner: #1d2129;
+  --dsw-alias-markdown-inline-code: #1a1e24;
+  --dsw-alias-markdown-citation: #1d2129;
+  --dsw-alias-markdown-placeholder: #1d2129;
+  --dsw-alias-markdown-tag: #1d2129;
+
+  --dsw-alias-scrollbar-bg-l1: #3d424a;
+  --dsw-alias-scrollbar-bg-l2: #31363f;
+  --dsw-alias-scrollbar-hover-l1: #4a505c;
+  --dsw-alias-scrollbar-hover-l2: #55606f;
+
+  --dsw-alias-tooltip-bg: #292d33;
+  --dsw-alias-toast-bg: #292d33;
+  --dsw-alias-hovercard-bg: #22262e;
+
+  --dsw-specific-sidebar-fill: #121212;
+  --dsw-specific-sidebar-nav-item-active: #1d2129;
+  --dsw-specific-sidebar-nav-item-hover: #161a1f;
+  --dsw-specific-sidebar-nav-item-active-accent: #292d33;
+  --dsw-specific-input-major: #161a1f;
+  --dsw-specific-bubble: #221d1a;
+  --dsw-specific-bubble-highlight: #2a241f;
+  --dsw-specific-menu: #1d2129;
+  --dsw-specific-selector: #22262e;
+  --dsw-specific-tip: #1d2129;
+  --dsw-specific-login-input: #121212;
+}
+
+/* ---------------------------------------------------------------------------
+ * 3b. 深色板静态色重映射（OMP dark 中性灰阶）
+ *     部分组件直接引用 --dsw-static-neutral-bluish-*（不经 alias），
+ *     把常用档位统一重映射为 OMP dark 灰阶，保证侧边栏/输入卡/按钮全部换肤。
+ * ------------------------------------------------------------------------- */
+body[data-ds-dark-theme] {
+  --dsw-static-neutral-bluish-1000: #0a0a0c;
+  --dsw-static-neutral-bluish-950: #121212;
+  --dsw-static-neutral-bluish-900: #161a1f;
+  --dsw-static-neutral-bluish-875: #1a1e24;
+  --dsw-static-neutral-bluish-850: #1d2129;
+  --dsw-static-neutral-bluish-800: #22262e;
+  --dsw-static-neutral-bluish-750: #292d33;
+  --dsw-static-neutral-bluish-700: #31363f;
+  --dsw-static-neutral-bluish-600: #3d424a;
+  --dsw-static-neutral-bluish-500: #5f6673;
+  --dsw-static-neutral-bluish-400: #777d88;
+  --dsw-static-neutral-bluish-300: #9aa0aa;
+  --dsw-static-neutral-bluish-200: #b0b6c0;
+  --dsw-static-neutral-bluish-150: #c8ccd2;
+  --dsw-static-neutral-bluish-100: #d4d4d4;
+  --dsw-static-neutral-bluish-75: #dde0e4;
+  --dsw-static-neutral-bluish-60: #e4e6e8;
+  --dsw-static-neutral-bluish-50: #eaecee;
+  --dsw-static-neutral-bluish-00: #f2f3f4;
+}
+
+/* ---------------------------------------------------------------------------
+ * 3c. 皮肤自定义组件语义变量（浅/深双主题自动切换）
+ *     供 §4-7 里我们注入的 .dsh-cli-* 元素引用，色值全部来自 OMP 官方 token。
+ * ------------------------------------------------------------------------- */
+:root {
+  --cli-accent: #547da7;
+  --cli-accent-soft: #6d93c0;
+  --cli-text: #2d2d30;
+  --cli-subtle: #6c6c6c;
+  --cli-border-strong: rgba(45, 45, 48, 0.16);
+  --cli-border-soft: rgba(45, 45, 48, 0.1);
+  --cli-prompt: #2d2d30;
+  --cli-cursor: #547da7;
+  --cli-selection: rgba(84, 125, 167, 0.35);
+  --cli-user-bubble: #e8e8e8;
+  --cli-user-bubble-hover: #dedee6;
+  --cli-tool-bg: #e8e8f0;
+  --cli-status-bg: #f0f0f0;
+  --cli-cursor-block: #2d2d30; /* 浅色界面：深灰长方形块光标（图1 式） */
+  --cli-cursor-bg-rev: #000000; /* 覆盖态反色背景（浅色：黑） */
+  --cli-cursor-fg-rev: #ffffff; /* 覆盖态反色文字（浅色：白） */
+  --cli-stats-model: #8a5a7a; /* OMP statusLineModel 浅色 */
+  --cli-stats-sep: #767676;
+  --cli-stats-counts: #9a7326;
+  --cli-stats-duration: #4a7d8c;
+  --cli-stats-cache: #588458;
+  --cli-stats-context: #6a6a8a;
+  --cli-stats-cost: #a0603a;
+  --cli-stats-subagents: #9a7326;
+  --cli-thinking: #767676;
+  --cli-thinking-high: #7e57c2;
+  --cli-md-heading: #9a7326;
+  --cli-md-link: #547da7;
+  --cli-md-code: #5a8080;
+  --cli-md-quote: #6c6c6c;
+  --cli-md-bullet: #588458;
+  --cli-diff-added: #e8f0e8;
+  --cli-diff-removed: #f0e8e8;
+  --cli-diff-added-word: #588458;
+  --cli-diff-removed-word: #aa5555;
+}
+body[data-ds-dark-theme] {
+  --cli-accent: #0088fa;
+  --cli-accent-soft: #4aa8ff;
+  --cli-text: #d4d4d4;
+  --cli-subtle: #777d88;
+  --cli-border-strong: rgba(212, 212, 212, 0.16);
+  --cli-border-soft: rgba(212, 212, 212, 0.08);
+  --cli-prompt: #d4d4d4;
+  --cli-cursor: #0088fa;
+  --cli-selection: rgba(0, 136, 250, 0.35);
+  --cli-user-bubble: #221d1a;
+  --cli-user-bubble-hover: #2a241f;
+  --cli-tool-bg: #1d2129;
+  --cli-status-bg: #121212;
+  --cli-cursor-block: #cccccc; /* 深色界面：浅灰长方形块光标（图1 实测 #CCCCCC） */
+  --cli-cursor-bg-rev: #ffffff; /* 覆盖态反色背景（深色：白，图2） */
+  --cli-cursor-fg-rev: #000000; /* 覆盖态反色文字（深色：黑） */
+  --cli-stats-model: #d787af; /* OMP statusLineModel 深色 */
+  --cli-stats-sep: #5f6673;
+  --cli-stats-counts: #febc38;
+  --cli-stats-duration: #5fafaf;
+  --cli-stats-cache: #5faf5f;
+  --cli-stats-context: #8787af;
+  --cli-stats-cost: #d7875f;
+  --cli-stats-subagents: #febc38;
+  --cli-thinking: #5f6673;
+  --cli-thinking-high: #b281d6;
+  --cli-md-heading: #febc38;
+  --cli-md-link: #0088fa;
+  --cli-md-code: #e5c1ff;
+  --cli-md-quote: #777d88;
+  --cli-md-bullet: #febc38;
+  --cli-diff-added: #1f3322;
+  --cli-diff-removed: #331f21;
+  --cli-diff-added-word: #89d281;
+  --cli-diff-removed-word: #fc3a4b;
+}
+
+/* ---------------------------------------------------------------------------
+ * 4. 终端质感细节（两种主题通用）
+ * ------------------------------------------------------------------------- */
+
+/* 选区：CLI 黑白反色（用户要求：不要蓝）
+   深色界面 → 白底黑字；浅色界面 → 黑底白字（终端反色选中） */
+::selection {
+  background: #000000 !important;
+  color: #ffffff !important;
+}
+body[data-ds-dark-theme] ::selection {
+  background: #ffffff !important;
+  color: #000000 !important;
+}
+
+/* 输入光标：强调蓝 */
+textarea,
+input {
+  caret-color: var(--cli-accent);
+}
+
+/* 代码块：去圆角毛玻璃，扁平终端卡 */
+body[data-ds-dark-theme] .markdown code,
+body[data-ds-dark-theme] pre,
+body[data-ds-dark-theme] [class*="codeBlock"],
+body[data-ds-dark-theme] [class*="code-block"] {
+  border-radius: 4px;
+}
+
+/* 滚动条更细、更扁平（Webkit 内核） */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-thumb {
+  border-radius: 4px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* 正文排版密度微调：更贴近终端行高 */
+body {
+  letter-spacing: 0;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* 主输入卡：22px 大圆角 → 收敛为终端感小圆角（唯一含 textarea 的卡片） */
+div:has(textarea) {
+  border-radius: 8px !important;
+}
+
+/* ❯ 提示符所在容器：左侧留白，避免贴住圆角边缘 */
+div:has(> .dsh-cli-prompt) {
+  padding-left: 12px;
+}
+
+/* 提示符与文字水平对齐（HANDOFF 踩坑 13）：
+   textarea 是 absolute 定位，不受 host padding 影响，文字起点 = 自身 paddingLeft。
+   S2 更新：`>` 已贴卡左缘（left 0 = 消息列 304），文字起点收到 paddingLeft 16px
+   （原 28px 让 > 到文字间距 19px 太远，用户反馈；现 16px → 间距 ~7px） */
+div:has(> .dsh-cli-prompt) textarea,
+div:has(> .dsh-cli-prompt) [class$="_backdrop"] {
+  padding-left: 16px !important;
+}
+
+/* 右下角宠物（dsh-pet）：轻微降饱和/压暗，与终端风格融合（可删此段恢复原样） */
+.dsh-pet-root video {
+  filter: saturate(0.78) brightness(0.9) contrast(0.98);
+}
+/* 桌宠不拦截点击：根容器自身 pointer-events:none 已足够，不挡界面操作。
+   注意：不要用 .dsh-pet-root * 禁掉整个子树——内部画布（canvas）依赖
+   pointer-events:auto 接收鼠标事件，禁掉后桌宠会变得无法拖拽/点击互动
+   （历史踩坑：曾全子树放行导致桌宠拖不动，见 diag 记录）。 */
+.dsh-pet-root {
+  pointer-events: none !important;
+}
+
+/* ---------------------------------------------------------------------------
+ * 5. > 终端提示符（由 client.js 插入 .dsh-cli-prompt，Claude Code 风格）
+ *    绝对定位对齐文字行：文字行盒顶 = textarea paddingTop(4px)，行高 24px，
+ *    font-size 16px 与正文同号 → `>` 字形在行盒内自然垂直居中（与输入字符一致）。
+ * ------------------------------------------------------------------------- */
+.dsh-cli-prompt {
+  position: absolute;
+  left: 0; /* 贴输入卡左缘 = 消息列左缘，与用户消息前 `>` 垂直对齐（S2） */
+  top: 4px;
+  font-size: 16px;
+  line-height: 24px;
+  display: block;
+  color: var(--cli-prompt);
+  font-weight: 400;
+  user-select: none;
+}
+
+/* ============================================================================
+ * 6. 输入栏终端化（PLAN-input-bar · 深色）
+ * ----------------------------------------------------------------------------
+ * Q1 去卡片化 / Q2 保留 ❯ / Q3 无占位符 / Q4 块光标(JS) / Q5-15 状态行 /
+ * Q16 纯键盘 Esc / Q17 隐藏发送按钮
+ * 选择器策略：结构(:has) + 稳定 aria-label，不依赖哈希类名。
+ * ========================================================================== */
+
+/* 6.1 主输入卡去卡片化：透明背景、无阴影、无边框、无圆角——彻底无"方框"感；
+   四周边框交给下方 6.1b 的上下 hairline（Claude Code 输入区无卡片框） */
+div:has(textarea) {
+  background: transparent !important;
+  box-shadow: none !important;
+  border-color: transparent !important;
+  border-radius: 0 !important;
+}
+
+/* 6.1b 输入区边界：上下两条终端 hairline（2px，文字色，用户拍板）
+   间距比例复刻 Claude Code 参考图（用户要求按相对关系，不锁死像素）：
+   上线→文字 ≈ 0.75em（padding-top 0.25em + textarea 内部 0.5em）
+   文字→下线 ≈ 0.6em（textarea 内部 0.25em + padding-bottom 0.375em）
+   两线间距 ≈ 2.4em，上下留白近似对称、上线侧略宽松（视觉平衡）。
+   选择器注意：不能用 [class$="_card"]（$= 匹配整个 class 结尾，卡上有 seat 后缀
+   永远匹配不到）；用 [class*="_card"]（子串匹配，_card 语义后缀稳定）。 */
+[class*="_card"]:has(textarea) {
+  border-top: 2px solid var(--cli-text) !important;
+  border-bottom: 2px solid var(--cli-text) !important;
+  border-left: none !important;
+  border-right: none !important;
+  border-radius: 0 !important;
+  padding-top: 0.25em !important;
+  padding-bottom: 0.375em !important;
+}
+/* 若 JS 已把 seat 打在输入卡上，规则一致（无需重复）；若打错在外层容器，
+   用结构选择器覆盖它，避免横线框住 hero 欢迎区（.dsh-cli-composer-seat 可能
+   落在 wSkVaW_composerStack 上，它含标题但无 textarea 直接子） */
+.dsh-cli-composer-seat:not(:has(textarea)) {
+  border-top: none !important;
+  border-bottom: none !important;
+}
+
+/* 6.1c 输入栏宽度对齐消息区（S2 用户要求：> 与消息区 > 垂直对齐、长度平齐）
+   官方 _card max-width 780px → 移除；实测 root 内容宽 1120（含 padding），
+   卡宽 calc(100% - 16px) = 1104 与消息列(1104px) 一致，flex 居中后 left=304 对齐 */
+[class*="_card"]:has(textarea) {
+  max-width: none !important;
+  width: calc(100% - 16px) !important;
+}
+
+/* 6.1d 输入栏区域不透明背景（S2 修复滚动重叠）
+   消息滚动容器 overflow:visible，滚动中消息文字会溢出滚动区底部；
+   输入栏原为透明背景 → 溢出的文字透过输入栏显示 = 重叠。
+   给 composer 最外层容器补页面底色背景，滚动时消息被输入栏区域盖住。 */
+[class$="_composerStack"] {
+  background: var(--dsw-alias-bg-base) !important;
+}
+
+/* 6.1e 空（hero 输入栏贴底——2026-08-19 尝试中，hero 布局复杂暂缓；
+   当前保留 §6.5c 高度钳制，输入卡不随长文本撑高，页面不滚动） */
+
+/* 6.1f 输入区面板背景（用户反馈"输入框变成透明的了，文本和对话记录混在一起"）：
+   §6.1 透明卡在多消息/长文本时输入文字与对话视觉连片。补一层面板底、
+   状态行同底、宽度对齐卡 calc(100% - 16px)，底部输入栏一体成块、与对话清晰分隔。
+   ⚠️ 2026-08-20 用户要求去掉色差：背景改用页面同色 --dsw-alias-bg-base
+   （#121212），不再用提亮的 --dsw-alias-bg-layer-1（#161a1f）——输入区与对话区
+   背景一致，仅靠 hairline 分隔。
+   选择器 (0,1,0) 压过 §6.1 div:has(textarea) (0,0,2)。 */
+.dsh-cli-composer-seat {
+  background: var(--dsw-alias-bg-base) !important;
+}
+.dsh-cli-statsbar {
+  background: var(--dsw-alias-bg-base) !important;
+  width: calc(100% - 16px) !important;
+  justify-content: center !important;
+}
+
+/* 6.2 空输入无占位符（Q3）——隐藏文字但不删元素（防 IME 遮挡）。
+   必须同时透明 color 与 -webkit-text-fill-color：§6.2b 给 textarea 设了
+   text-fill-color=文字色，而 text-fill-color 会覆盖 ::placeholder 的透明 color
+   （S2 用户反馈"给智能体发消息"占位符又显示出来，根因在此） */
+div:has(textarea) textarea::placeholder {
+  color: transparent !important;
+  -webkit-text-fill-color: transparent !important;
+}
+
+/* 6.2b 输入框文字恢复原生显示（S2 修复滚动重合）
+   原架构：textarea 透明 + backdrop 渲染文字（为块光标模拟）。
+   光标已改原生竖线 → textarea 直接显示文字（原生滚动裁剪，不重合），
+   隐藏 backdrop（官方 backdrop 滚动不同步，导致滚动时文字溢出输入栏） */
+div:has(textarea) textarea {
+  color: var(--cli-text) !important;
+  -webkit-text-fill-color: var(--cli-text) !important;
+}
+div:has(textarea) [class$="_backdrop"] {
+  display: none !important;
+}
+
+/* 6.3 原生 caret 隐藏（光标 = JS 长方形块，§6.8；避免竖线+方块双光标） */
+html.dsh-cli-js-ready div:has(textarea) textarea {
+  caret-color: transparent !important;
+}
+
+/* 6.4 输入区底部工具行整体隐藏（用户拍板：Claude Code 风格，去掉 + / Full access /
+   模型选择 / 发送箭头，只留两条横线夹住的文本行）
+   - 容器 [class$="_row"]（uV2eYG_row，含全部工具按钮）display:none
+   - 发送/停止按钮同样隐藏，但 DOM 保留——Esc 中断的 JS stopBtn.click() 照常工作；
+     Enter 提交由官方 keydown 处理，纯键盘双通道不受影响
+   - ⚠️ 选择器必须用「输入卡(_card)内的 _row」，不能用 `div:has(textarea) [class$="_row"]`：
+     后者会命中含 textarea 的整个对话根容器下所有以 _row 结尾的元素——命令结果卡片
+     的行容器（GenericCommandCard 的 VAXeoG_row）也被 display:none，导致命令执行后
+     UI 毫无反应（S4 实测根因）。 _card 是 textarea 的直接卡片祖先，工具行在卡内。 */
+div:has(textarea) .dsh-cli-composer-seat [class$="_row"] {
+  display: none !important;
+}
+/* 双保险：显式隐藏发送/停止按钮本体（父行隐藏后子元素不可见，但防布局变体） */
+div:has(textarea) button[aria-label="发送消息"],
+div:has(textarea) button[aria-label="Send message"],
+div:has(textarea) button[aria-label="停止生成"],
+div:has(textarea) button[aria-label="Stop generating"] {
+  display: none !important;
+}
+
+/* 6.4b 下拉选择器箭头隐藏（Claude Code 状态行是纯文字，无 ▾ 箭头）：
+   CSS modules 类名为「哈希_语义名」，语义后缀稳定 */
+[class$="_chevron"],
+[class$="_triggerIcon"],
+[class$="_trigger"] svg,
+[class$="_workspace"] svg,
+[class$="_seat"] svg,
+[class$="_triggerEffort"]::before {
+  display: none !important;
+}
+/* ⚠️ 例外：侧边栏「设置」按钮的齿轮图标（VOzbGW_trigger 也以 _trigger 结尾，
+   被上面规则误伤 display:none——恢复显示。用户要求展开态也显示齿轮。 */
+[class*="sidebarCol"] [class$="_trigger"] svg {
+  display: block !important;
+}
+
+/* 6.4c 选择器文字终端化：等宽、弱化背景，像状态行文字段 */
+[class$="_trigger"],
+[class$="_triggerLabel"],
+[class$="_triggerEffort"],
+[class$="_workspace"],
+[class$="_seat"] {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  font-family: var(--dsw-font-family, monospace) !important;
+  font-size: 12px !important;
+}
+
+/* 6.5 多行输入上限：最高 10 行 ≈ 320px，超出内部滚动（Q10 原始 5 行/160px，
+   2026-08-19 用户反馈：贴长文时 160px 太小 + overlay 滚动条不可见 → 一大截文字
+   "消失"感。放宽到 10 行/320px 缓解；滚动条样式保持系统默认）
+   加 !important：官方样式会把 overflow-y 覆盖为 hidden，导致超出不能滚 */
+div:has(textarea) textarea {
+  max-height: 320px;
+  overflow-y: auto !important;
+}
+
+/* 6.5b 双滚动条修复（2026-08-19 用户反馈）：textarea 外层包裹容器 _scroll 也是
+   overflow-y:auto 且内容超高（360>336），与 textarea 自身的滚动条叠在同一右缘，
+   看起来是两个滚动条。textarea 已能滚，外层滚动纯多余 → 禁用外层的垂直滚动，
+   只留 textarea 一个滚动条。
+   ⚠️ 选择器铁律（§6.4 同款坑）：输入卡类名是 "_card xxx"（JS 打的 seat 后缀），
+   [class$="_card"] 匹配整个 class 属性结尾永远不中！必须用 JS 打的稳定类
+   .dsh-cli-composer-seat（markComposerSeat 只打在输入卡上，最精确），
+   且不能裸 div:has(textarea) [class$="_scroll"]——对话区滚动容器 fWNiuW_scroll
+   也以 _scroll 结尾、整个应用根都含 textarea，会误伤消息区滚动（用户实测）。
+   2026-08-21 修改：overflow 从 visible 改为 hidden + max-height:320px——裁剪职责
+   从输入卡（§6.5c 原 overflow:hidden）移到 _scroll。卡级 overflow:hidden 会把
+   向上展开的斜杠命令菜单 / /model 弹层（conversation.input.overlay 锚点在卡内
+   顶部，菜单 bottom:calc(100%+4px) 从卡顶向上开，最高 320px）整块裁掉，导致
+   命令被消费但 UI 不可见（用户实测 /model 无任何呈现）。_scroll 层裁剪内容为
+   mirror/backdrop（均不可见），无视觉影响；textarea 内部滚动不受影响。 */
+div:has(textarea) .dsh-cli-composer-seat [class$="_scroll"] {
+  max-height: 320px !important;
+  overflow: hidden !important;
+}
+
+/* 6.5c 输入卡高度钳制（粘贴长文本回归修复）：
+   grow/卡被长文本撑高（504/350px），textarea 的 320px 内部滚动条被埋进
+   撑高的容器 → 钳制 seat 高 = 320 textarea + 12 padding + 2 hairline ≈ 334px，
+   内容在 textarea 内滚动，卡片不随内容增高。
+   2026-08-21 修改：去掉卡级 overflow:hidden（裁剪职责移到 §6.5b 的 _scroll 层）。
+   卡级 overflow:hidden 会把向上展开的斜杠命令菜单 / /model 弹层
+   （conversation.input.overlay 锚点在卡内顶部，弹层从卡顶向上开）整块裁掉，
+   导致命令被前端消费（后端照常执行）但 UI 完全不可见。max-height 钳制保留。 */
+div:has(textarea) .dsh-cli-composer-seat {
+  max-height: 334px !important;
+  /* 显式声明 visible：dist 补丁或旧版本可能残留卡级 overflow:hidden（会裁掉向上
+     展开的斜杠菜单 / /model 弹层），此处用 !important 压掉任何残留裁剪。 */
+  overflow: visible !important;
+}
+
+/* 6.5d 会话模式：输入栏贴死页面底端（用户要求"输入框是整个页面的最底端，
+   不能往下滚动"）：
+   root（uV2eYG_root，flex column，官方高 60+padB8）内容高补到 68 + padB 0，
+   justify-content:flex-end 把 [输入卡42, 状态行18] 组压到底 → 卡在上、
+   状态行贴死视口底 900；长文本时卡向上长（flex-shrink:0 不压缩），状态行
+   始终钉在最低端。仅会话模式（scrollBody 内无 composerHero）；hero 中部
+   布局不受影响。
+   ⚠️ 勿用 top / margin / transform / order 移卡片（四条死路，实测记录见
+   HANDOFF 踩坑 #22）。 */
+[class*="_scrollBody"]:not(:has([class*="_composerHero"])) div:has(> .dsh-cli-composer-seat) {
+  height: 68px !important;
+  padding-bottom: 0 !important;
+  justify-content: flex-end !important;
+}
+[class*="_scrollBody"]:not(:has([class*="_composerHero"])) .dsh-cli-composer-seat {
+  flex-shrink: 0 !important;
+}
+
+/* 6.5d2 输入卡真正脱离 scrollBody 滚动流（2026-08-20 根治"输入框与对话记录
+   一起滚"）：
+   §6.5d 用 justify-content:flex-end 只是"压到底"，seat 仍是 scrollBody 内容流的
+   最后一个子元素——scrollBody 滚动时 seat 跟着滚（实测 seatInScrollBody=true、
+   scrollBody scrollTop 6093/6093 滚到底，输入框视觉贴底但物理在流内）。
+   position:sticky; bottom:0 让 seat 固定在 scrollBody 可视底部：滚动对话时
+   seat 钉住不动、内容从上方滚过；输入框内部滚动与对话区彻底隔离。
+   ⚠️ 若 seat 容器非 sticky 兼容场景（hero 模式已排除），此规则仅命中会话模式。 */
+[class*="_scrollBody"]:not(:has([class*="_composerHero"])) div:has(> .dsh-cli-composer-seat) {
+  position: sticky !important;
+  bottom: 0 !important;
+}
+
+/* 6.5e 输入区滚动隔离（用户反馈"粘贴长信息时整个对话框被滚动"）：
+   textarea 滚到边界后滚轮链式上抛到消息区 scrollBody（实测 sbScrollTop
+   0→300）。overscroll-behavior:contain 让输入区独立滚动——输入区内滚动
+   只滚输入内容、不带动对话区；消息区自身滚动不受影响。
+   ⚠️ 必须同时给输入卡容器 .dsh-cli-composer-seat 设 contain（2026-08-20
+   用户反馈"输入框往上滚时对话记录跟着滚"）：只给 textarea 设 contain 不够——
+   textarea 向上滚到顶后 overscroll 链沿 DOM 上抛，_grow/_scroll/_card 都是
+   默认 overscroll auto，链会穿过它们到达消息区 scrollBody。给输入卡设
+   contain 才能截断整条链（输入卡是 textarea 到消息区之间的屏障）。 */
+div:has(textarea) textarea,
+.dsh-cli-composer-seat,
+.dsh-cli-composer-seat [class$="_scroll"] {
+  overscroll-behavior: contain !important;
+}
+
+/* 6.5f 输入区不显示焦点环（用户反馈"输入框多了两条金色的线"）：
+   §14.2 :focus-visible 的 2px 金 outline 在 textarea 聚焦时形成上下两条
+   全宽金线；终端风格焦点指示 = 块光标（§6.8），不需要焦点环。
+   ⚠️ 特异性陷阱（实测）：div:has(textarea) textarea = (0,0,3)（:has 只算
+   参数特异性）输给 :focus-visible (0,1,0)——必须用带 class 的选择器
+   .dsh-cli-composer-seat textarea (0,1,1)。其余元素金环保留。 */
+.dsh-cli-composer-seat textarea {
+  outline: none !important;
+}
+
+/* S3：完整状态栏（React 组件替换官方 StatsLine，一个组件一行排开）
+   等宽 12px、OMP 分色、| 分隔符；nowrap 一行平铺 */
+.dsh-cli-statsbar {
+  display: flex;
+  align-items: center;
+  font-family: var(--dsw-font-family, monospace);
+  font-size: 12px;
+  line-height: 18px;
+  color: var(--cli-subtle);
+  white-space: nowrap;
+}
+.dsh-cli-statsbar > span {
+  flex: none;
+}
+.dsh-cli-statsbar-sep {
+  color: var(--cli-stats-sep);
+  margin: 0 6px;
+}
+.dsh-cli-statsbar-model { color: var(--cli-stats-model); }
+.dsh-cli-statsbar-counts { color: var(--cli-stats-counts); }
+.dsh-cli-statsbar-token { color: var(--cli-subtle); }
+.dsh-cli-statsbar-cache { color: var(--cli-stats-cache); }
+.dsh-cli-statsbar-ctx { color: var(--cli-stats-context); }
+
+/* 6.8 块光标（JS 渲染 .dsh-cli-cursor）—— 用户参考图1：默认态 = 实心浅灰长方形块
+   12×20px（高覆盖文字、宽约半字符），不反色、不闪烁，停在插入点。
+   CSS !important 覆盖 JS 内联的 16×16（免重启）。
+   translateY(-2px)：JS top 对齐字形顶，光标高(20) 比字形(16) 多出的半差 2px 上移，
+   使光标垂直居中对齐文字（用户反馈"没对齐正中央"）。 */
+.dsh-cli-cursor {
+  position: absolute;
+  width: 12px !important;
+  height: 20px !important;
+  transform: translateY(-2px) !important;
+  background: var(--cli-cursor-block);
+  pointer-events: none;
+  z-index: 5;
+  animation: none;
+}
+
+/* 覆盖态：光标块消失，该字符黑白反色 + 背景（图2 cc 效果）
+   宽度 = 字符宽（JS charW ~16px，覆盖整个字符，参照 cc 反色块 18px） */
+.dsh-cli-cursor-char {
+  position: absolute;
+  display: none;
+  background: var(--cli-cursor-bg-rev);
+  color: var(--cli-cursor-fg-rev);
+  text-align: center;
+  pointer-events: none;
+  z-index: 5;
+  animation: none;
+  line-height: 16px;
+  font-size: 16px;
+}
+html.dsh-cli-cursor-off .dsh-cli-cursor {
+  animation: none;
+  opacity: 0;
+}
+@media (prefers-reduced-motion: reduce) {
+  .dsh-cli-cursor { animation: none; }
+}
+
+/* ============================================================================
+ * 7. 对话区终端化（设计文档 §1.1 / §1.3 · Q3=C 纯样式层）
+ *    去气泡、满宽靠左、紧凑行高、消息间细分隔线。
+ *    不动结构，不引入行内标记（二期）。
+ *    选择器全部走 CSS Modules 语义后缀，哈希前缀变化不影响。
+ * ========================================================================== */
+
+/* 7.1 满宽靠左：去掉对话列 748px 居中 max-width 约束（仅命中 Md3f7G_column） */
+[class$="_column"] {
+  max-width: none !important;
+}
+
+/* 7.2 对话滚动容器左右留白收敛（16px 32px → 紧凑 24px；仅含 column 的 scroll，
+   不误伤输入区的 uV2eYG_scroll） */
+[class$="_scroll"]:has(> [class$="_column"]) {
+  padding: 16px 24px !important;
+}
+
+/* 7.3 用户消息气泡去卡片化：透明底、无圆角、无 padding（文本直接铺在背景上） */
+[class$="_bubble"] {
+  background: transparent !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  border: none !important;
+  padding: 0 !important;
+  max-width: none !important;
+}
+
+/* 7.4 用户消息靠左（与 AI 消息同一排版，不再右对齐） */
+[class$="_userRow"],
+[class$="_userStack"] {
+  align-items: flex-start !important;
+  max-width: none !important;
+}
+
+/* 7.5 紧凑行高：终端感 1.55（覆盖 markdown 正文与段落） */
+[class$="_column"] {
+  line-height: 1.55;
+}
+
+/* 7.6 消息间细分隔线：每条用户消息下方 hairline（替代大间距卡片）
+   不用相邻选择器——用户消息之间隔着 AI 回复，相邻几乎不触发
+   透明度 0.14：0.08 在深底上几乎不可见，0.14 可感知但不刺眼 */
+[class$="_userRow"] {
+  padding-top: 10px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--cli-border-strong);
+}
+
+/* 7.7 用户消息归属标记：行首 `>`（Q13=②，与输入框提示符呼应）
+   注意：_userRow 是 flex-column，::before 作为 flex item 会跑到消息"上面一行"，
+   所以改用绝对定位贴左上角，并给 _userStack 让位 18px（侦察实证，勿改回 flex 方案） */
+[class$="_userRow"] {
+  position: relative;
+}
+[class$="_userRow"]::before {
+  content: '>';
+  position: absolute;
+  left: 0;
+  top: 10px; /* 与消息第一行文字行盒顶对齐（_userRow padding-top 10px） */
+  font-size: 16px;
+  line-height: 1.45; /* 与消息 markdown 行高一致（§7.8），字形在行盒内自然垂直居中 */
+  font-weight: 600;
+  color: var(--cli-accent);
+  user-select: none;
+}
+[class$="_userRow"] [class$="_userStack"] {
+  padding-left: 18px !important;
+}
+
+/* 7.8 markdown 段落行高（用户偏好：1.45，比官方 28px 紧凑、比 1.35 宽松一点）
+   段落间距 0：用户偏好「冒号结尾句子 → 下一块 = 普通行距」，不留块间距；
+   !important 压过官方样式（实测无 !important 会被覆盖） */
+[class$="_column"] p {
+  line-height: 1.45 !important;
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+}
+
+/* 7.9 markdown 块级元素间距收紧（根因实证：官方 HR 上下各 32px、H2 32/16px、
+   UL/OL 16px 的大 margin —— 冒号结尾段落后跟分隔线/标题/列表时被撑得老远） */
+[class$="_column"] hr {
+  margin-top: 0.5em !important;
+  margin-bottom: 0.5em !important;
+}
+[class$="_column"] h1,
+[class$="_column"] h2,
+[class$="_column"] h3,
+[class$="_column"] h4 {
+  margin-top: 0.6em !important;
+  margin-bottom: 0.3em !important;
+}
+[class$="_column"] ul,
+[class$="_column"] ol {
+  margin-top: 0.3em !important;
+  margin-bottom: 0.3em !important;
+}
+[class$="_column"] li {
+  margin-top: 0 !important;
+  margin-bottom: 0.15em !important;
+  line-height: 1.45 !important; /* 官方 li 行高 28px → 与正文 1.45 统一 */
+}
+
+/* 7.10 消息块间距（根因实证：_column 是 flex-column，官方 gap 16px 太宽；
+   用户偏好演进：先压 2px 太挤 → 调到 8px：消息间可区分、又不松散。
+   段落/句子衔接仍为 0 间距（7.8），此 gap 只作用于消息块之间） */
+[class$="_column"] {
+  gap: 8px !important;
+}
+
+/* 7.11 消息时间/数据行常显（用户要求：不要 hover 才显示）
+   官方 _timeStart（用户消息时间）/_timeEnd（AI 消息 时间·用时·首token·tok/s）
+   默认 opacity 0、hover 消息才显示 → 改为常显，不占额外布局（opacity 变化不重排） */
+[class$="_timeStart"],
+[class$="_timeEnd"] {
+  opacity: 1 !important;
+}
+
+/* ============================================================================
+ * 9. M2-1 工具调用内联化（input.png 任务界面）
+ *    目标：把工具调用卡片压成一行等宽小字 `── 工具名 摘要`（蓝字主体+灰元信息）
+ *    官方 collapsed 行已是单行（_callRow 24px），这里再压成 12px 等宽小字、
+ *    加 ── 前缀、工具名蓝字、摘要灰字；展开 body 保持点击展开但默认收起。
+ * ========================================================================== */
+
+/* 9.1 工具行容器：等宽 12px 小字、紧凑行高、去掉卡片视觉 */
+[class$="_callRow"] {
+  font-family: var(--dsw-font-family, monospace) !important;
+  font-size: 12px !important;
+  line-height: 18px !important;
+}
+
+/* 9.2 工具行前缀 `──`（Claude Code 式执行指示） */
+[class$="_callRow"] > [class$="_root"] > [class$="_row"]::before,
+[class$="_callRow"] [class$="_row"]::before {
+  content: '──';
+  color: var(--cli-accent);
+  margin-right: 8px;
+  font-weight: 600;
+}
+
+/* 9.3 工具名（title）蓝字主体 */
+[class$="_callRow"] [class$="_title"] {
+  color: var(--cli-accent) !important;
+  font-weight: 500 !important;
+  font-size: 12px !important;
+}
+
+/* 9.4 摘要灰字、等宽 */
+[class$="_callRow"] [class$="_summary"],
+[class$="_callRow"] [class$="_summarySuffix"],
+[class$="_callRow"] [class$="_fileLink"] {
+  color: var(--cli-subtle) !important;
+  font-size: 12px !important;
+  line-height: 18px !important;
+}
+
+/* 9.5 状态图标缩小（leading 16px → 12px 对齐小字） */
+[class$="_callRow"] [class$="_leading"] {
+  width: 14px !important;
+  height: 14px !important;
+  margin-right: 4px !important;
+}
+[class$="_callRow"] [class$="_leading"] svg {
+  width: 12px !important;
+  height: 12px !important;
+}
+
+/* 9.6 展开 body：默认收起是官方行为，保持点击展开；把展开卡压回 12px 等宽 */
+[class$="_callRow"] [class$="_ioCard"],
+[class$="_callRow"] [class$="_terminalBody"],
+[class$="_callRow"] [class$="_bodyScroll"] {
+  font-family: var(--dsw-font-family, monospace) !important;
+  font-size: 12px !important;
+  line-height: 18px !important;
+}
+
+/* 9.7 错误工具行：摘要用错误色（保持官方语义但适配小字） */
+[class$="_callRow"] [class$="_errorSummary"] {
+  color: var(--dsw-alias-state-error-primary) !important;
+}
+
+/* ============================================================================
+ * 10. 去掉「回到最底部」箭头按钮（2026-08-19 用户要求）
+ *     官方 ChatView 上划离开底部时出现的 floating 按钮（.toBottomSlot 容器
+ *     + .toBottom 按钮，34px 圆形箭头，sticky 定位）。CSS module 哈希前缀，
+ *     用后缀 $= 匹配。直接隐藏两个类。
+ * ========================================================================== */
+[class$="_toBottomSlot"],
+[class$="_toBottom"] {
+  display: none !important;
+}
+
+/* ============================================================================
+ * 11. M2-2 todo 任务列表终端化（2026-08-19 · 用户拍板：JS 辅助 + 绿色完成态）
+ *     DSH 把 `- [ ]` / `- [x]` 渲染成 <li><code>- [ ]</code> 文本</li>（code 无属性，
+ *     纯 CSS 无法区分）。JS（client.template.js §3.5）读 code 文本打类：
+ *       [x] → li.dsh-cli-todo-done + code.dsh-cli-todo-check
+ *       [ ] → li.dsh-cli-todo-pending + code.dsh-cli-todo-box
+ *     本段纯 CSS 画终端符号：去 decimal 编号、等宽紧凑、○ 待办（蓝）/ ✓ 完成（绿）。
+ *     树状前缀 ├─ / └─（参照 dsh-TUI GoalTodoPanel 的 BranchPrefix）。
+ * ========================================================================== */
+
+/* 11.1 todo LI：去官方 decimal 编号，改终端树状前缀 */
+[class$="_column"] li.dsh-cli-todo-done,
+[class$="_column"] li.dsh-cli-todo-pending {
+  list-style: none !important;
+  font-family: var(--dsw-font-family, monospace) !important;
+  font-size: 14px !important;
+  line-height: 22px !important;
+  margin: 2px 0 !important;
+  padding-left: 2px !important;
+}
+
+/* 11.2 前缀符号：待办 ─○（蓝点）、完成 ─✓（绿勾） */
+[class$="_column"] li.dsh-cli-todo-pending::before {
+  content: '─ ○ ';
+  color: var(--cli-accent, #0088fa);
+  font-weight: 400;
+}
+[class$="_column"] li.dsh-cli-todo-done::before {
+  content: '─ ✓ ';
+  color: var(--dsw-alias-state-success-primary, #89d281);
+  font-weight: 400;
+}
+
+/* 11.3 code 原文（"- [ ]" / "- [x]"）隐藏，符号由伪元素接管 */
+[class$="_column"] li.dsh-cli-todo-done code,
+[class$="_column"] li.dsh-cli-todo-pending code {
+  display: none !important;
+}
+
+/* 11.4 完成态文字淡化（保持可读但弱化，参照 dsh-TUI completed dimColor） */
+[class$="_column"] li.dsh-cli-todo-done {
+  color: var(--cli-subtle, #777d88) !important;
+}
+[class$="_column"] li.dsh-cli-todo-done code {
+  color: var(--cli-subtle, #777d88) !important;
+}
+
+/* 11.5 同一列表内非 todo 的 li（普通列表项）不受影响；todo 的 ul/ol 紧凑化 */
+[class$="_column"] ol:has(li.dsh-cli-todo-done),
+[class$="_column"] ol:has(li.dsh-cli-todo-pending),
+[class$="_column"] ul:has(li.dsh-cli-todo-done),
+[class$="_column"] ul:has(li.dsh-cli-todo-pending) {
+  padding-left: 4px !important;
+  margin: 4px 0 !important;
+}
+
+/* ============================================================================
+ * 12. 侧边栏终端化（GOAL 第二部分 · Q1=B 保留 GUI 结构只做皮肤）
+ *     目标：压缩纵向留白、更紧的行高、等宽字体、导航项三态清晰、去大圆角。
+ *     选择器：语义后缀（_newSession/_sessionRow/_groupSection/_logoRow/
+ *     _settingsArea/_list）+ :has() 锚定 sidebar 容器，不依赖哈希前缀。
+ *     注意：侧边栏类名（hHd-Xa_*/YDXeBa_*/qDHVXG_*）哈希前缀可变，后缀稳定。
+ * ========================================================================== */
+
+/* 12.0 侧边栏容器：等宽字体、更紧凑的整体留白 */
+[class*="sidebarCol"] {
+  font-family: var(--dsw-font-family, monospace) !important;
+}
+
+/* 12.1 logo 行：压缩高度（60px → 44px），等宽 */
+[class*="sidebarCol"] [class$="_logoRow"] {
+  height: 44px !important;
+  padding: 4px 8px !important;
+}
+
+/* 12.2 新会话按钮：去大圆角（12px → 4px）、压缩高度（38px → 30px）、等宽 */
+[class*="sidebarCol"] [class$="_newSession"] {
+  height: 30px !important;
+  border-radius: 4px !important;
+  padding: 4px 12px !important;
+  font-family: var(--dsw-font-family, monospace) !important;
+  font-size: 13px !important;
+  margin-bottom: 8px !important;
+}
+
+/* 12.3 会话项：行高 32px → 26px、去圆角、等宽 13px、三态 hover/active 清晰 */
+[class*="sidebarCol"] [class$="_sessionRow"] {
+  height: 26px !important;
+  min-height: 26px !important;
+  border-radius: 4px !important;
+  padding: 0 8px !important;
+  font-family: var(--dsw-font-family, monospace) !important;
+  font-size: 13px !important;
+  line-height: 26px !important;
+}
+/* 会话项 hover：终端式浅色底 */
+[class*="sidebarCol"] [class$="_sessionRow"]:hover {
+  background-color: var(--dsw-alias-interactive-bg-hover, rgba(232, 230, 224, 0.08)) !important;
+}
+
+/* 12.4 工作区组：标题弱化、紧凑、等宽 12px */
+[class*="sidebarCol"] [class$="_groupSection"] {
+  font-family: var(--dsw-font-family, monospace) !important;
+  font-size: 12px !important;
+  line-height: 22px !important;
+}
+[class*="sidebarCol"] [class$="_workspace"] {
+  font-family: var(--dsw-font-family, monospace) !important;
+  font-size: 12px !important;
+}
+
+/* 12.5 列表容器：压缩 padding、去掉多余留白 */
+[class*="sidebarCol"] [class$="_list"] {
+  padding: 0 4px 8px 4px !important;
+}
+
+/* 12.6 设置入口：等宽小字、紧凑、齿轮图标 + 文字（用户要求）
+   位置：与主区输入框垂直齐平（用户 2026-08-19 拍板，参考截图对齐）。
+   footArea 原本靠 regionArea(flex-grow:1) 挤到右下角；改为 absolute 定位，
+   设置在侧边栏底部左下角、比原版底部(y≈868)略高一点点（用户 2026-08-19 拍板，
+   top: 856 → 按钮 y≈860，比原版高约 8px）。只对 footArea 定位，settingsArea 保持正常流。 */
+[class*="sidebarCol"] [class$="_footArea"] {
+  font-family: var(--dsw-font-family, monospace) !important;
+  font-size: 12px !important;
+  position: absolute !important;
+  top: 856px !important;
+  left: 12px !important;
+  right: 12px !important;
+  z-index: 5 !important;
+}
+[class*="sidebarCol"] [class$="_settingsArea"] {
+  height: 30px !important;
+  font-family: var(--dsw-font-family, monospace) !important;
+  font-size: 12px !important;
+}
+/* 侧边栏根容器需相对定位（absolute 的锚点） */
+[class*="sidebarCol"] [class*="_root"] {
+  position: relative !important;
+}
+/* 设置按钮齿轮图标尺寸 + 间距 */
+[class*="sidebarCol"] [class$="_trigger"] svg {
+  width: 16px !important;
+  height: 16px !important;
+  flex: none !important;
+}
+[class*="sidebarCol"] [class$="_trigger"] {
+  gap: 8px !important;
+}
+
+/* 12.7 侧边栏内所有按钮/图标：去大圆角，终端直角感（保留可点性） */
+[class*="sidebarCol"] button {
+  border-radius: 4px !important;
+  font-family: var(--dsw-font-family, monospace) !important;
+}
+
+/* 12.8 侧边栏收缩态（rail，根容器有 _collapsed 特征类）：
+   图标统一 18×18 + 水平居中——修复两个问题（用户 2026-08-19）：
+   1) toggle 按钮本身 x=18（其他按钮 x=10，中心偏右 8px）→ 负 margin 左移对齐；
+   2) 新建会话 svg 只有 10×18 → 明显比其他小，统一 18px。
+   ⚠️ 用 [class*="_collapsed"]（子串）——根容器类是
+   "hHd-Xa_root hHd-Xa_collapsed hHd-Xa_railIn hHd-Xa_quietBars"，
+   不以 _collapsed 结尾，$= 匹配不到（踩坑 16/19 重演）。 */
+[class*="_collapsed"] [class$="_toggle"] svg,
+[class*="_collapsed"] [class$="_newSession"] svg {
+  width: 18px !important;
+  height: 18px !important;
+}
+[class*="_collapsed"] [class$="_newSession"] {
+  padding: 0 !important;
+}
+/* toggle 按钮左移 8px，与其他图标按钮水平中心对齐 */
+[class*="_collapsed"] [class$="_toggle"] {
+  margin-left: -8px !important;
+}
+
+/* ============================================================================
+ * 13. 对话区 markdown 终端化配色（GOAL 第三部分收尾 · 2026-08-19）
+ *     对齐 dsh-TUI darkTheme token（ROADMAP §S1）：
+ *       标题金 #febc38 / 链接蓝 #0088fa（已生效）/ 正文 #d4d4d4（已生效）/
+ *       引用左边框 / 代码块深底 / 表格终端化。
+ *     只改颜色与边框，不碰已收紧的间距（§7.8/7.9）。
+ * ========================================================================== */
+
+/* 13.1 标题：终端强调金（h1 略亮、h2-h4 同色），去粗体过重感 */
+[class$="_column"] h1,
+[class$="_column"] h2,
+[class$="_column"] h3,
+[class$="_column"] h4 {
+  color: #febc38 !important;
+  font-weight: 600 !important;
+}
+
+/* 13.2 链接：链接蓝（确认已生效，补 underline 增强可识别） */
+[class$="_column"] a {
+  color: #0088fa !important;
+  text-decoration: none !important;
+}
+[class$="_column"] a:hover {
+  text-decoration: underline !important;
+}
+
+/* 13.3 引用块：终端式左边框 + 弱化文字 */
+[class$="_column"] blockquote {
+  border-left: 3px solid #5f6673 !important;
+  background: transparent !important;
+  padding: 2px 12px !important;
+  margin: 0.4em 0 !important;
+  color: #8d95a6 !important;
+}
+
+/* 13.4 代码块：深色终端底、小圆角、边框极淡（沿用 6.x 已有规则再强化） */
+body[data-ds-dark-theme] [class$="_column"] pre,
+body[data-ds-dark-theme] [class$="_column"] [class*="codeBlock"],
+body[data-ds-dark-theme] [class$="_column"] [class*="code-block"] {
+  background: #161a1f !important;
+  border: 1px solid rgba(232, 230, 224, 0.08) !important;
+  border-radius: 4px !important;
+  padding: 8px 12px !important;
+  font-family: var(--dsw-font-family, monospace) !important;
+  font-size: 13px !important;
+  line-height: 1.5 !important;
+}
+
+/* 13.5 行内代码：终端深底 + 微圆角 */
+body[data-ds-dark-theme] [class$="_column"] p code,
+body[data-ds-dark-theme] [class$="_column"] li code:not(.dsh-cli-todo-box):not(.dsh-cli-todo-check) {
+  background: #1a1e24 !important;
+  color: #d4d4d4 !important;
+  border-radius: 3px !important;
+  padding: 1px 4px !important;
+  font-family: var(--dsw-font-family, monospace) !important;
+  font-size: 0.9em !important;
+}
+
+/* 13.6 表格：终端化——表头弱化、边框极淡、紧凑 */
+[class$="_column"] table {
+  border-collapse: collapse !important;
+  margin: 0.5em 0 !important;
+}
+[class$="_column"] th,
+[class$="_column"] td {
+  border: 1px solid rgba(232, 230, 224, 0.12) !important;
+  padding: 4px 10px !important;
+  font-size: 13px !important;
+  line-height: 1.45 !important;
+}
+[class$="_column"] th {
+  background: rgba(232, 230, 224, 0.06) !important;
+  color: #febc38 !important;
+  font-weight: 600 !important;
+}
+
+/* 13.7 列表：终端列表符（ul 用 ─ 前缀感，ol 保留数字但终端化）
+   ⚠️ 排除 todo li（§11 已有 ─ ○ / ─ ✓ 前缀，避免冲突） */
+[class$="_column"] ul {
+  list-style: none !important;
+  padding-left: 6px !important;
+}
+[class$="_column"] ul > li:not(.dsh-cli-todo-pending):not(.dsh-cli-todo-done)::before {
+  content: '─ ';
+  color: #febc38 !important;
+  font-weight: 400;
+}
+[class$="_column"] ol {
+  padding-left: 22px !important;
+}
+
+/* 13.8 分隔线 hr：终端虚线感 */
+[class$="_column"] hr {
+  border: none !important;
+  border-top: 1px dashed rgba(232, 230, 224, 0.25) !important;
+}
+
+/* ============================================================================
+ * 14. 动效与交互（GOAL 第七部分 · 2026-08-19）
+ *     原则：轻快不廉价——hover 用 120ms ease（快过 100ms 会生硬、慢过 200ms 显拖沓）；
+ *     focus-visible 用 2px 终端色焦点环（键盘导航可见）；reduced-motion 全局降级。
+ * ========================================================================== */
+
+/* 14.1 通用交互过渡：按钮/导航项/链接的 hover 状态平滑过渡（120ms） */
+[class*="sidebarCol"] button,
+[class*="sidebarCol"] [class$="_sessionRow"],
+[class$="_column"] a,
+[class$="_column"] button {
+  transition: background-color 120ms ease, color 120ms ease, border-color 120ms ease !important;
+}
+
+/* 14.2 :focus-visible 焦点环：2px 终端强调色（深色金、浅色蓝），键盘导航可见 */
+:focus-visible {
+  outline: 2px solid #febc38 !important;
+  outline-offset: 1px !important;
+  border-radius: 2px !important;
+}
+/* 浅色主题下用强调蓝（与深色金区分但同属强调系） */
+body:not([data-ds-dark-theme]) :focus-visible {
+  outline-color: #547da7 !important;
+}
+
+/* 14.3 主题切换过渡：背景/文字颜色平滑过渡（避免深浅切换生硬闪烁） */
+body,
+body[data-ds-dark-theme] {
+  transition: background-color 200ms ease, color 200ms ease !important;
+}
+
+/* 14.4 prefers-reduced-motion 全局降级：禁用所有动画/过渡（无障碍） */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ============================================================================
+ * 15. 右上角 Session log 按钮（2026-08-20 用户要求）
+ *     官方是胶囊形（border + radius 18px 外框）。去掉外框 → 纯文字按钮；
+ *     hover / 键盘聚焦时 "Session log" 文字下方出现下划线（终端链接风）。
+ *     选择器：限定在 headerUtilities 容器内（_sessionLogButton 是其子元素），
+ *     避免裸后缀误伤；CSS module 哈希前缀用 $= 匹配语义后缀。
+ *     注意 hover 的 background 不能省：官方 :hover 背景 (0,2,0) 会赢过
+ *     基础规则的 transparent !important，必须显式压掉。
+ * ========================================================================== */
+[class$="_headerUtilities"] [class$="_sessionLogButton"] {
+  min-width: 0 !important;
+  height: auto !important;
+  padding: 2px 4px !important;
+  border: none !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  font-family: var(--dsw-font-family, monospace) !important;
+  font-size: 12px !important;
+}
+[class$="_headerUtilities"] [class$="_sessionLogButton"]:hover:not(:disabled) {
+  background: transparent !important;
+}
+[class$="_headerUtilities"] [class$="_sessionLogButton"] span {
+  text-decoration: none;
+  transition: text-decoration-color 120ms ease;
+}
+[class$="_headerUtilities"] [class$="_sessionLogButton"]:hover:not(:disabled) span,
+[class$="_headerUtilities"] [class$="_sessionLogButton"]:focus-visible span {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-thickness: 1px;
+}
+
+/* ============================================================================
+ * 17. 提问弹窗输入框：去掉 §14.2 金色焦点环（2026-08-20 用户反馈）
+ *     问用户弹窗（ui-user-questions QuestionComposer）的单行/多行输入框
+ *     聚焦时出现 2px 金/蓝 outline。输入控件聚焦用原生 caret/边框即可，
+ *     不需要额外焦点环。选择器：CSS module 哈希前缀，后缀 $= 匹配
+ *     _customInput / _customTextarea（它们在 data-question-scroll 容器内）。
+ *     其余元素（按钮/链接）的键盘焦点环保留（无障碍）。
+ * ========================================================================== */
+[data-question-scroll] [class$="_customInput"],
+[data-question-scroll] [class$="_customTextarea"] {
+  outline: none !important;
+}
+
+/* ============================================================================
+ * 17.2 输入控件聚焦一律去焦点环（2026-08-20 用户要求"选中输入框时的金框去掉"）
+ *     主聊天输入框（§6.5f）与提问弹窗（§17.1）之外，兜底覆盖所有 input /
+ *     textarea / select：选中（聚焦）不再显示 §14.2 的 2px 金/蓝 outline——
+ *     输入控件聚焦用原生 caret / 边框即可。按钮/链接的键盘焦点环保留（无障碍）。
+ * ========================================================================== */
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: none !important;
+}
+
+/* ============================================================================
+ * 18. CLI 选择器（ask_user_question 内嵌对话记录版）
+ *     把官方问题卡片渲染成终端风格选择器，直接内嵌在对话消息流中，
+ *     不弹窗、不脱离文档流、无边框、无阴影、无过渡动画。
+ *     主题全走 --dsw-alias-* 令牌 + --dsw-font-family（浅色/深色自动跟随）。
+ * ========================================================================== */
+.dsh-cli-select {
+  font-family: var(--dsw-font-family, monospace);
+  /* 压过 §9.6 工具调用行统一 12px：选择器与对话正文同号（14px） */
+  font-size: 14px !important;
+  line-height: 22px !important;
+  color: var(--dsw-alias-label-primary);
+  padding: 4px 0;
+  outline: none;
+  user-select: none;
+  cursor: default;
+}
+.dsh-cli-select:focus,
+.dsh-cli-select:focus-visible { outline: none !important; }
+.dsh-cli-select-question {
+  font-weight: 700;
+  color: var(--dsw-alias-label-primary);
+  margin-bottom: 8px;
+}
+.dsh-cli-select-header {
+  font-weight: 400;
+  font-size: 0.85em;
+  color: var(--dsw-alias-label-secondary);
+  margin-bottom: 4px;
+}
+.dsh-cli-select-option {
+  padding: 1px 0 1px 4px;
+  color: var(--dsw-alias-label-secondary);
+  cursor: pointer;
+}
+.dsh-cli-select-option:hover { color: var(--dsw-alias-brand-primary); }
+.dsh-cli-select-option.is-selected { color: var(--dsw-alias-brand-primary); }
+.dsh-cli-select-option.is-checked { font-weight: 600; }
+.dsh-cli-select-arrow { display: inline-block; width: 1.2em; }
+.dsh-cli-select-marker { display: inline-block; width: 2.6em; }
+.dsh-cli-select-desc {
+  font-size: 0.85em;
+  opacity: 0.7;
+  padding-left: 1.6em;
+}
+.dsh-cli-select-option.is-selected .dsh-cli-select-desc { opacity: 0.75; }
+.dsh-cli-select-badge {
+  font-size: 0.72em;
+  color: var(--dsw-alias-brand-primary);
+  background: var(--dsw-alias-bg-layer-2);
+  border-radius: 3px;
+  padding: 0 5px;
+  margin-left: 6px;
+  vertical-align: middle;
+  font-weight: 400;
+}
+.dsh-cli-select-check {
+  display: inline-block;
+  width: 1.4em;
+  text-align: center;
+}
+.dsh-cli-select-hint {
+  font-size: 0.8em;
+  color: var(--dsw-alias-label-secondary);
+  opacity: 0.7;
+  margin-top: 8px;
+}
+.dsh-cli-select-result { margin-top: 4px; }
+.dsh-cli-select-result.is-ok { color: var(--dsw-alias-state-success-primary); }
+.dsh-cli-select-result.is-cancel { color: var(--dsw-alias-state-error-primary); }
+.dsh-cli-select-result.is-dim { color: var(--dsw-alias-label-secondary); opacity: 0.7; }
+.dsh-cli-select-pending {
+  color: var(--dsw-alias-label-secondary);
+  opacity: 0.6;
+  padding: 1px 0 1px 4px;
+}
+.dsh-cli-select-custom {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 2px 0 2px 4px;
+}
+.dsh-cli-select-custom-prompt {
+  color: var(--dsw-alias-brand-primary);
+  font-weight: 600;
+  user-select: none;
+}
+.dsh-cli-select-custom-input {
+  flex: 1;
+  font-family: var(--dsw-font-family, monospace);
+  font-size: 14px;
+  color: var(--dsw-alias-label-primary);
+  background: var(--dsw-alias-bg-layer-2);
+  border: 1px solid var(--dsw-alias-border-l2);
+  border-radius: 3px;
+  padding: 3px 8px;
+  outline: none;
+  min-width: 0;
+}
+.dsh-cli-select-custom-input:focus {
+  border-color: var(--dsw-alias-brand-primary);
+}
+
+/* ============================================================================
+ * 18. 大段粘贴/长文折叠提示条（A2 · 2026-08-26）
+ *     纯显示层：输入内容 ≥6 行 或 ≥600 字符时，输入卡顶部显示一行只读提示
+ *     （▸ N 行 · M 字符 · 首行预览），✕ 暂时隐藏、内容变化后恢复。
+ *     插入点为 seat 内 scroll 容器前（JS 处理），流内一行，等宽小字。
+ *     不修改 draft、不碰官方 paste 事务/引用 chip/undo。
+ * ========================================================================== */
+.dsh-cli-pastefold {
+  display: none;
+  align-items: center;
+  gap: 8px;
+  padding: 1px 12px;
+  font-family: var(--dsw-font-family, monospace);
+  font-size: 11px;
+  line-height: 17px;
+  color: var(--dsw-alias-label-secondary);
+  background: var(--dsw-alias-bg-layer-1);
+  border-bottom: 1px solid var(--dsw-alias-border-l1);
+  user-select: none;
+  flex-shrink: 0;
+}
+.dsh-cli-pastefold.visible { display: flex; }
+.dsh-cli-pastefold-text {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.dsh-cli-pastefold-dismiss {
+  flex: none;
+  cursor: pointer;
+  color: var(--dsw-alias-label-dimmed);
+  padding: 0 4px;
+  font-size: 12px;
+}
+.dsh-cli-pastefold-dismiss:hover { color: var(--dsw-alias-label-primary); }
+
+/* ============================================================================
+ * 19. 长文本 _grow 钳制（A2 附带修复 · 2026-08-26）
+ *     官方 autosize 把输入区 _grow 撑到内容全高（长文 > 可视高时）并滚底
+ *     scroll 以保持光标可见 → textarea 被顶出视口、只能看到内容尾部且滚不回去
+ *     （历史踩坑 #22/#23 "贴长文滚动链上抛/贴底" 的根源）。钳制 _grow 高度使
+ *     textarea 回到 scroll 顶部、内部自滚，用户可回看全文。
+ *     只作用于会话态（:has(textarea)），不影响 hero 态。
+ *     ⚠️ 钳制值必须 = scroll 容器的【实际可视高度 288px】，不能抄 scroll 的
+ *     max-height(320px)：seat 高 334 扣掉底部 row 后 scroll 真实窗口只有 288，
+ *     grow 钳 320 会让 textarea 比窗口高 32px，滚到底时内容最底 32px 被 scroll
+ *     (overflow:hidden) 裁掉、看不全（二次反馈"滚到底字体显示不完全"）。288
+ *     时 textarea 与窗口精确对齐，滚动可完整浏览全文；seat 高度 334 不变。
+ * ========================================================================== */
+div:has(textarea) .dsh-cli-composer-seat [class$="_grow"] {
+  max-height: 288px;
+  overflow-y: hidden;
+}
+
+/* ============================================================================
+ * 20. 发送即上屏兜底气泡（用户需求 · 2026-08-28）
+ *     官方 user 消息渲染依赖服务端提交往返，模型思考久/偶发延迟时 user 消息
+ *     晚于 thinking 上屏。皮肤在官方延迟时插入此临时气泡（仿官方 user 气泡
+ *     视觉：右对齐、--dsw-specific-bubble 底色、圆角 22px、16/24 字号），
+ *     官方 user 气泡出现后 JS 自动移除。正常路径（官方 <60ms 渲染）不出现。
+ * ========================================================================== */
+.dsh-cli-echo-bubble {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
+  margin: 2px 0;
+}
+.dsh-cli-echo-bubble .dsh-cli-echo-bubble-inner {
+  max-width: min(525px, 82%);
+  background: var(--dsw-specific-bubble);
+  border-radius: 22px;
+  padding: 10px 16px;
+  font-size: 16px;
+  line-height: 24px;
+  color: var(--dsw-alias-label-primary);
+  white-space: pre-wrap;
+  word-break: break-word;
+  overflow-wrap: break-word;
+}
+
+/* ============================================================================
+ * 21. QueueDock 队列条终端化（用户需求 · 2026-08-28）
+ *     去掉卡片"框"感 → 透明面板、无边框无圆角；灰色等宽终端文字；
+ *     头部/行加终端前缀字符（▸ / ⑂，TUI figures 素材）；紧凑行高。
+ *     位置保持官方 slot（输入框上方 = thinking 行下方），复用皮肤
+ *     --dsw-font-family 等宽栈。锚点：官方 data-slot 稳定属性 + 语义后缀。
+ * ========================================================================== */
+[data-slot="conversation.input.dock"] [class$="_panel"] {
+  background: transparent;
+  border-radius: 0;
+  padding: 2px 0;
+}
+[data-slot="conversation.input.dock"] [class$="_panel"]::after {
+  display: none; /* 官方 panel::after 画 1px 边框，去掉 */
+}
+/* 计数头部：等宽灰色 + ▸ 前缀（折叠），展开变 ▾ */
+[data-slot="conversation.input.dock"] [class$="_header"] {
+  height: 26px;
+  padding: 2px 8px;
+  border-radius: 0;
+  color: var(--dsw-alias-label-tertiary);
+}
+[data-slot="conversation.input.dock"] [class$="_header"]::before {
+  content: '\25b8\00a0'; /* ▸ + nbsp（折叠态：向右） */
+  flex: none;
+  color: var(--dsw-alias-label-tertiary);
+}
+[data-slot="conversation.input.dock"] [class$="_header"][aria-expanded="true"]::before {
+  content: '\25be\00a0'; /* ▾ + nbsp（展开态：向下） */
+}
+[data-slot="conversation.input.dock"] [class$="_header"] [class$="_lead"] {
+  display: none; /* 隐藏官方 svg 图标 */
+}
+[data-slot="conversation.input.dock"] [class$="_header"] [class$="_chevron"] {
+  display: none; /* 隐藏官方右侧 chevron，前缀箭头即方向指示 */
+}
+[data-slot="conversation.input.dock"] [class$="_header"] [class$="_count"] {
+  font-family: var(--dsw-font-family, monospace);
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--dsw-alias-label-tertiary);
+}
+/* 行：灰色等宽 + ⑂ 前缀 + 紧凑 */
+[data-slot="conversation.input.dock"] [class$="_row"] {
+  height: 26px;
+  padding: 2px 8px;
+  border-radius: 0;
+}
+[data-slot="conversation.input.dock"] [class$="_row"]::before {
+  content: '\2442\00a0'; /* ⑂ + nbsp */
+  flex: none;
+  color: var(--dsw-alias-label-tertiary);
+}
+[data-slot="conversation.input.dock"] [class$="_row"] + [class$="_row"] {
+  box-shadow: none; /* 去官方行间 1px 分隔线 */
+}
+[data-slot="conversation.input.dock"] [class$="_row"] [class$="_preview"],
+[data-slot="conversation.input.dock"] [class$="_row"] [class$="_editor"] {
+  font-family: var(--dsw-font-family, monospace);
+  font-size: 13px;
+  color: var(--dsw-alias-label-tertiary);
+}
+[data-slot="conversation.input.dock"] [class$="_action"] {
+  width: 24px;
+  height: 24px;
+  color: var(--dsw-alias-label-tertiary);
+}
+/* 前缀箭头与输入框 > 提示符左对齐（实测差 106px 来自官方 .dock 水平居中+inset，
+ * 2026-08-28）：dock 去居中、宽度撑满、去左 inset → 前缀起点 = seat 左 = > 左 */
+[data-slot="conversation.input.dock"] [class$="_dock"] {
+  margin-left: 0 !important;
+  width: 100% !important;
+  max-width: none !important;
+  padding-left: 0 !important;
+}
+[data-slot="conversation.input.dock"] [class$="_row"],
+[data-slot="conversation.input.dock"] [class$="_header"] {
+  padding-left: 24px !important; /* 24px = seat 相对 card 左边距，前缀起点对齐 >（实测） */
+}
+

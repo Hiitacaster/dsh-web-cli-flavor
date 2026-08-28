@@ -1,0 +1,59 @@
+{
+  "name": "dsh-web-cli-flavor",
+  "version": "0.10.4",
+  "description": "DeepSeek Harness Web GUI 终端风格皮肤：等宽字体 + Gentle Mist Blue 深色色板 + Claude Code 命令行质感（保留完整 GUI 界面）。",
+  "keywords": [
+    "dsh",
+    "dsh-plugin",
+    "deepseek-harness",
+    "web-ui",
+    "theme",
+    "claude-code",
+    "terminal",
+    "cli-flavor",
+    "cordis",
+    "react"
+  ],
+  "license": "MIT",
+  "type": "module",
+  "main": "lib/index.js",
+  "exports": {
+    ".": {
+      "types": "./lib/types/index.d.ts",
+      "default": "./lib/index.js"
+    },
+    "./client": {
+      "types": "./lib/types/client/index.d.ts",
+      "default": "./lib/client.js"
+    },
+    "./cordis.patch.yml": "./cordis.patch.yml",
+    "./styles/cli-flavor.css": "./styles/cli-flavor.css",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "lib",
+    "styles",
+    "cordis.patch.yml"
+  ],
+  "scripts": {
+    "build:css": "node ../scripts/build.mjs",
+    "install:profile": "powershell -ExecutionPolicy Bypass -File ../scripts/install.ps1"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "inject": [
+        "@deepseek-ai/dsh-client-runtime"
+      ],
+      "platform": "web"
+    }
+  },
+  "peerDependencies": {
+    "@deepseek-ai/cordis": "^4.0.1",
+    "@deepseek-ai/dsh-client-runtime": "^0.1.0-rc.6",
+    "@deepseek-ai/dsh-client-ui-slots": "^0.1.0-rc.6",
+    "react": "^18.2.0"
+  }
+}
