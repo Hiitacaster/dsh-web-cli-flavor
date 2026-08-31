@@ -60,9 +60,18 @@ function Get-FrontendAssetsPath {
     # CIM probe failed; fall through to npx cache
   }
 
-  # 2) Fallback: npx cache copy
-  $npx = Join-Path $env:LOCALAPPDATA 'npm-cache\_npx\1e7f6d9597241db0\node_modules\@deepseek-ai\dsh-web-frontend\dist\assets'
-  if (Test-Path $npx) { return $npx }
+  # 2) Fallback: npx cache copy (hash directory varies by install/machine)
+  $npxRoot = Join-Path $env:LOCALAPPDATA 'npm-cache\_npx'
+  if (Test-Path $npxRoot) {
+    $candidates = Get-ChildItem -Path $npxRoot -Directory -ErrorAction SilentlyContinue | ForEach-Object {
+      $p = Join-Path $_.FullName 'node_modules\@deepseek-ai\dsh-web-frontend\dist\assets'
+      if (Test-Path $p) { $p }
+    }
+    if ($candidates) {
+      # pick the most recently written one
+      return ($candidates | Sort-Object { (Get-Item $_).LastWriteTime } -Descending | Select-Object -First 1)
+    }
+  }
 
   return $null
 }

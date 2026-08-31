@@ -1,6 +1,6 @@
 # dsh-web-cli-flavor — DSH Web GUI 终端风格皮肤
 
-> 版本：2026-08-28（A5 轮询瘦身 + hero 美术移除 + /simplify 清理 + 内置字体）
+> 版本：0.10.4（2026-08-28：A5 轮询瘦身 + hero 美术移除 + /simplify 清理 + 内置字体）
 
 ## 这是什么
 
@@ -21,7 +21,7 @@ dsh-web-cli-flavor/
 ├── fonts/                  # 内置字体（Cascadia Code 子集 woff2 + OFL.txt 许可）
 ├── lib/
 │   ├── client.template.js  # ★ 皮肤 JS 源码（唯一 JS 源，改这里）
-│   ├── client.js           # ★ 构建产物（build 时内联 CSS + 字体 data URI，勿手改）
+│   ├── client.js           # 构建产物（build 时内联 CSS + 字体 data URI，勿手改；已从仓库排除）
 │   └── index.js            # 插件入口（宿主侧：注册 /readonly /workspace /fullacc 别名）
 └── styles/
     └── cli-flavor.css      # ★ 皮肤 CSS 源码（唯一 CSS 源，改这里）
@@ -61,8 +61,18 @@ scripts/
    ```
 5. **重启 dsh web 服务** + 浏览器 **Ctrl+Shift+R** 强刷。
 
-> 只想直接用、不改源码时，可跳过第 3 步——`lib/client.js` 已是构建好的最新产物，
-> 复制进 profile 即可（JS 按请求从磁盘服务，强刷即生效）。
+> 第 3 步不可跳过：`lib/client.js` 是构建产物，已从本仓库排除，
+> 必须先运行 `node scripts/build.mjs` 生成后再安装。
+
+## 卸载 / 回滚
+
+运行安装脚本时加上 `-Uninstall` 参数即可移除 profile 中的注册、插件目录以及 dist CSS patch：
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts/install.ps1 -Uninstall
+```
+
+卸载后**重启 dsh web 服务**并浏览器强刷，即可完全恢复官方默认界面。
 
 ## 日常开发规则（接手必读）
 

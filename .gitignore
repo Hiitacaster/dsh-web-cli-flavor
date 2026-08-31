@@ -1,5 +1,8 @@
-﻿node_modules/
+node_modules/
 *.zip
 *.tgz
 *.log
 .DS_Store
+
+# 构建产物：由 scripts/build.mjs 从 client.template.js + cli-flavor.css 生成
+dsh-web-cli-flavor/lib/client.js

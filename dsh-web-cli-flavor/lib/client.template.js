@@ -11,6 +11,11 @@
  *   - 不要直接手改 lib/client.js（会被覆盖）；请改模板或 CSS 后重新构建
  * ============================================================================
  */
+(() => {
+if (typeof window === 'undefined' || !window.__ModuleLoader__ || typeof window.__ModuleLoader__.load !== 'function') {
+	console.warn('[web-cli-flavor] host __ModuleLoader__ not available, skin not loaded.');
+	return;
+}
 window.__ModuleLoader__.load({
 	id: 'dsh-web-cli-flavor',
 	factory: (require) => {
@@ -27,6 +32,13 @@ window.__ModuleLoader__.load({
 
 		// ---- 从 DSH 外壳取 React（不能自己打包 React）----
 		let react = require('react');
+
+		// ---- 调试辅助：皮肤代码异常不阻断主流程，但必须留下日志 ----
+		const logError = (label, err) => {
+			if (typeof console !== 'undefined' && console.error) {
+				console.error('[web-cli-flavor]', label, err);
+			}
+		};
 
 		// ============================================================================
 		// 1. 注入皮肤 CSS（一次性；热重载/重复挂载时去重）
@@ -73,7 +85,7 @@ window.__ModuleLoader__.load({
 				const batch = Array.from(rafTasks);
 				rafTasks.clear();
 				for (const t of batch) {
-					try { t(); } catch (e) { /* 单任务异常不影响其余 */ }
+					try { t(); } catch (e) { logError('rafThrottle task', e); }
 				}
 			});
 		};
@@ -345,7 +357,7 @@ window.__ModuleLoader__.load({
 						if (typeof ta.__dshPasteFold === 'function') ta.__dshPasteFold(v);
 					},
 				});
-			} catch (e) { /* 劫持失败不影响块光标其它功能 */ }
+			} catch (e) { logError('textarea.value hook', e); }
 			// 输入区滚动隔离：见 installInputScrollIsolation（§3.1b，document 级
 			// capture 方案）。textarea 级 wheel 监听在真实环境不生效，已弃用，
 			// 统一走全局 capture + closest('.dsh-cli-composer-seat') 拦截。
@@ -551,7 +563,7 @@ window.__ModuleLoader__.load({
 						if (hasOfficial() || n >= 25) removeEcho();
 						else scrollBottom();
 					}, 200);
-				} catch (err) { /* 皮肤兜底异常不阻断 */ }
+				} catch (err) { logError('userEcho', err); }
 			};
 
 			// Enter 发送意图检测
@@ -577,7 +589,7 @@ window.__ModuleLoader__.load({
 					} else if (v !== '') {
 						pendingValue = ''; // 用户编辑路径，取消发送检测
 					}
-				} catch (err) { /* 不阻断 */ }
+				} catch (err) { logError('userEcho setter', err); }
 			};
 		}
 
@@ -954,7 +966,7 @@ window.__ModuleLoader__.load({
 				try {
 					const parsed = argsRaw ? JSON.parse(argsRaw) : null;
 					if (parsed && Array.isArray(parsed.questions)) questions = parsed.questions;
-				} catch (e) {}
+				} catch (e) { logError('safe guard', e); }
 
 				const [answers, setAnswers] = react.useState([]);
 				const [activeIdx, setActiveIdx] = react.useState(0);
@@ -1056,7 +1068,7 @@ window.__ModuleLoader__.load({
 					if (wasFocused) input.blur();
 					if (!customMode) {
 						el.focus({ preventScroll: true });
-						try { el.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); } catch (e) {}
+						try { el.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); } catch (e) { logError('safe guard', e); }
 					}
 					const maxLen = Math.max(1, opts.length + 1);
 					const onKeyDown = (ev) => {
@@ -1107,7 +1119,7 @@ window.__ModuleLoader__.load({
 							summary = '✓ 已选择：' + labels.join('、');
 							cls = 'dsh-cli-select-result is-ok';
 						}
-					} catch (e) {}
+					} catch (e) { logError('safe guard', e); }
 					const q0 = questions[0];
 					return react.createElement('div', { className: 'dsh-cli-select dsh-cli-select-done' },
 						q0 && q0.header ? react.createElement('div', { className: 'dsh-cli-select-header' }, q0.header) : null,
@@ -1311,3 +1323,4 @@ window.__ModuleLoader__.load({
 		return module.exports;
 	}
 });
+})();
